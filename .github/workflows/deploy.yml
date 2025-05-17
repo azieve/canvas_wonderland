@@ -11,11 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # Skipping pre-deployment checks for now
-      # - name: Run pre-deployment checks
-      #   run: |
-      #     chmod +x ./pre-deploy.sh
-      #     ./pre-deploy.sh
+      # Try listing the FTP directory first to diagnose connection issues
+      - name: Test FTP Connection
+        uses: sebastianpopp/ftp-action@releases/v2
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          user: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          options: "-v"
+          script: "ls -la"
           
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -25,3 +29,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
           server-dir: /
+          dangerous-clean-slate: false
