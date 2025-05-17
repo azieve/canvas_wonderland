@@ -11,15 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
+      # Using a different FTP action to handle authentication issues
       - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: kevinpainchaud/simple-ftp-deploy-action@v1.2.1
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          # Escaping special characters in the password
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: /
-          dangerous-clean-slate: false
-          # Added for debugging
-          log-level: verbose
+          ftp_host: ${{ secrets.FTP_SERVER }}
+          ftp_username: ${{ secrets.FTP_USERNAME }}
+          ftp_password: ${{ secrets.FTP_PASSWORD }}
+          local_source_dir: "."
+          dist_target_dir: "/"
+          delete: "false"
