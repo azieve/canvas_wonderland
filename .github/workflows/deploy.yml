@@ -11,22 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # Try listing the FTP directory first to diagnose connection issues
-      - name: Test FTP Connection
-        uses: sebastianpopp/ftp-action@releases/v2
-        with:
-          host: ${{ secrets.FTP_SERVER }}
-          user: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          options: "-v"
-          script: "ls -la"
-          
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
+          # Escaping special characters in the password
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
           server-dir: /
           dangerous-clean-slate: false
+          # Added for debugging
+          log-level: verbose
