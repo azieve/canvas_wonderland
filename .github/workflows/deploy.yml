@@ -11,13 +11,33 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # Using a different FTP action to handle authentication issues
-      - name: FTP Deploy
-        uses: kevinpainchaud/simple-ftp-deploy-action@v1.2.1
+      # Using lftp which has more options and better handling of FTP connections
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+        
+      # Check both FTP addresses with verbose output
+      - name: Test FTP Connection
+        run: |
+          echo "Testing FTP connection to ftp.canvaswonderland.com"
+          lftp -d -e "set ssl:verify-certificate no; ls; quit" -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ftp.canvaswonderland.com || true
+          
+          echo "Testing FTP connection to canvaswonderland.com"
+          lftp -d -e "set ssl:verify-certificate no; ls; quit" -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} canvaswonderland.com || true
+          
+          echo "Testing FTPS connection to ftp.canvaswonderland.com"
+          lftp -d -e "set ssl:verify-certificate no; ls; quit" -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ftps://ftp.canvaswonderland.com || true
+          
+          echo "Testing FTPS connection to canvaswonderland.com"
+          lftp -d -e "set ssl:verify-certificate no; ls; quit" -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ftps://canvaswonderland.com || true
+      
+      # Using a more flexible FTP deploy action
+      - name: Upload via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          ftp_host: ${{ secrets.FTP_SERVER }}
-          ftp_username: ${{ secrets.FTP_USERNAME }}
-          ftp_password: ${{ secrets.FTP_PASSWORD }}
-          local_source_dir: "."
-          dist_target_dir: "/"
-          delete: "false"
+          server: canvaswonderland.com
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: /
+          dangerous-clean-slate: false
+          protocol: ftps
