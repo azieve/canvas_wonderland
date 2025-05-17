@@ -1,0 +1,19 @@
+<!-- This is a test file to verify GitHub Actions deployment -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Test</title>
+</head>
+<body>
+    <h1>GitHub Actions Deployment Test</h1>
+    <p>If you can see this file, the automated deployment via GitHub Actions is working correctly!</p>
+    <p>Deployment timestamp: <span id="timestamp"></span></p>
+    
+    <script>
+        // Add current date and time
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>
