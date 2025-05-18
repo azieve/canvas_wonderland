@@ -6,21 +6,22 @@ on:
             - main
 
             jobs:
-              deploy:
+              ftp-deploy:
                   runs-on: ubuntu-latest
                       steps:
-                            - uses: actions/checkout@v3
+                            - name: Checkout code
+                                    uses: actions/checkout@v3
 
-                                        # Use standard FTP deployment instead of SFTP
-                                              - name: FTP Deploy
-                                                      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-                                                              with:
-                                                                        server: ${{ secrets.FTP_SERVER }}
-                                                                                  username: ${{ secrets.FTP_USERNAME }}
-                                                                                            password: ${{ secrets.FTP_PASSWORD }}
-                                                                                                      local-dir: ./
-                                                                                                                server-dir: /public_html/
-                                                                                                                          exclude: |
-                                                                                                                                      **/.git*
-                                                                                                                                                  **/.git*/**
-                                                                                                                                                              **/node_modules/**
+                                          - name: FTP Deploy
+                                                  uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+                                                          with:
+                                                                    server: ${{ secrets.FTP_SERVER }}
+                                                                              username: ${{ secrets.FTP_USERNAME }}
+                                                                                        password: ${{ secrets.FTP_PASSWORD }}
+                                                                                                  local-dir: ./
+                                                                                                            server-dir: /public_html/
+                                                                                                                      exclude: |
+                                                                                                                                  **/.git*
+                                                                                                                                              **/.git*/**
+                                                                                                                                                          **/node_modules/**
+                                                                                                                                                          
