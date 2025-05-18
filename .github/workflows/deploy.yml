@@ -11,12 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # Using SamKirkland's FTP Deploy Action with BlueHost-specific settings
+      # Try with the full path in username
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: xnv.vxv.mybluehost.me
-          username: ${{ secrets.FTP_USERNAME }}
+          username: ${{ secrets.FTP_USERNAME }}@canvaswonderland.com
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
           server-dir: /public_html/
