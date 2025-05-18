@@ -1,23 +1,27 @@
-name: Deploy to SFTP
+name: Deploy to FTP
 
 on:
   push:
-    branches:
-      - main
+      branches:
+            - main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      # Try using SFTP instead of FTP
-      - name: SFTP Deploy
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local_path: ./
-          remote_path: /public_html/
-          sftp_only: true
+            jobs:
+              deploy:
+                  runs-on: ubuntu-latest
+                      steps:
+                            - uses: actions/checkout@v3
+
+                                        # Use standard FTP deployment instead of SFTP
+                                              - name: FTP Deploy
+                                                      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+                                                              with:
+                                                                        server: ${{ secrets.FTP_SERVER }}
+                                                                                  username: ${{ secrets.FTP_USERNAME }}
+                                                                                            password: ${{ secrets.FTP_PASSWORD }}
+                                                                                                      local-dir: ./
+                                                                                                                server-dir: /public_html/
+                                                                                                                          exclude: |
+                                                                                                                                      **/.git*
+                                                                                                                                                  **/.git*/**
+                                                                                                                                                              **/node_modules/**
+                                                                                                                                                              
