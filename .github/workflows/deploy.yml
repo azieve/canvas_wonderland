@@ -11,33 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # Using lftp which has more options and better handling of FTP connections
-      - name: Install lftp
-        run: sudo apt-get install -y lftp
-        
-      # Check both FTP addresses with verbose output
-      - name: Test FTP Connection
-        run: |
-          echo "Testing FTP connection to ftp.canvaswonderland.com"
-          lftp -d -e "set ssl:verify-certificate no; ls; quit" -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ftp.canvaswonderland.com || true
-          
-          echo "Testing FTP connection to canvaswonderland.com"
-          lftp -d -e "set ssl:verify-certificate no; ls; quit" -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} canvaswonderland.com || true
-          
-          echo "Testing FTPS connection to ftp.canvaswonderland.com"
-          lftp -d -e "set ssl:verify-certificate no; ls; quit" -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ftps://ftp.canvaswonderland.com || true
-          
-          echo "Testing FTPS connection to canvaswonderland.com"
-          lftp -d -e "set ssl:verify-certificate no; ls; quit" -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ftps://canvaswonderland.com || true
-      
-      # Using a more flexible FTP deploy action
-      - name: Upload via FTP
+      # Using SamKirkland's FTP Deploy Action with BlueHost-specific settings
+      - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: canvaswonderland.com
+          server: xnv.vxv.mybluehost.me
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /
+          server-dir: /public_html/
           dangerous-clean-slate: false
-          protocol: ftps
+          protocol: ftp
