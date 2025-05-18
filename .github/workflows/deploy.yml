@@ -1,4 +1,4 @@
-name: Deploy to FTP
+name: Deploy to SFTP
 
 on:
   push:
@@ -11,14 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # Try with the BlueHost account username from the homedir path
-      - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      # Try using SFTP instead of FTP
+      - name: SFTP Deploy
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          server: xnv.vxv.mybluehost.me
-          username: xnvvxvmy
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: /public_html/
-          dangerous-clean-slate: false
-          protocol: ftp
+          local_path: ./
+          remote_path: /public_html/
+          sftp_only: true
